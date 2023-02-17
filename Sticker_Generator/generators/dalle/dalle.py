@@ -48,4 +48,4 @@ def generateDalle(size="", number=1) -> None:
 
         with open("../Sticker_Generator/data/" + randName, 'wb') as handler:
             handler.write(imgData)
-    print("Sticler(s) generated in Acadia/Sticker_Generator/data")
+    print("Sticker(s) generated in Acadia/Sticker_Generator/data")
