@@ -1,6 +1,7 @@
 import openai
 import requests
 import uuid
+import os
 from generators.types.typeGenerator import randomSticker
 
 # Convert size to correct format
@@ -34,8 +35,16 @@ def generateDalle(size="", number=1) -> None:
         n=1,
         size=size_converter(size)
         )
+        
         imageUrl = response['data'][0]['url']
         imgData = requests.get(imageUrl).content
+
         randName = str(uuid.uuid4()) + ".jpg"
+        
+        path = "../Sticker_Generator/data/"
+        isExist = os.path.exists(path)
+        if not isExist:
+            os.makedirs(path)
+
         with open("../Sticker_Generator/data/" + randName, 'wb') as handler:
             handler.write(imgData)
