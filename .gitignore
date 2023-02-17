@@ -129,5 +129,5 @@ dmypy.json
 .pyre/
 
 # ignore files in data
-sticker_generator/data/
+sticker_generator/data/*
 
