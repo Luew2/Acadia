@@ -20,3 +20,5 @@ allow_prereleases = false
 
 [packages]
 openai = "*"
+selenium = "*"
+webdriver-manager = "*"
