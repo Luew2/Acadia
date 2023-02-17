@@ -26,7 +26,7 @@ pipenv sync
 # Run
 Run the main file in the desired sub-project directory.
 
-Currently: run main.py in sticker_generator with option args -n (number of stickers), -size (256, 512, 1024) to generate stickers.
+Currently: run main.py in Sticker_Generator with option args -n (number of stickers), -size (256, 512, 1024) to generate stickers.
 
 # Clean up
 run cleanUp.py in the base directory to remove generated stickers in Sticker_Generator/data
