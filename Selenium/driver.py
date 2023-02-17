@@ -8,7 +8,7 @@ from selenium.webdriver.chrome.options import Options
 
 ## Setup chrome options
 chrome_options = Options()
-chrome_options.add_argument("--headless") # Ensure GUI is off
+# chrome_options.add_argument("--headless") # Ensure GUI is off
 chrome_options.add_argument("--no-sandbox")
 
 # Set path to chromedriver as per your configuration

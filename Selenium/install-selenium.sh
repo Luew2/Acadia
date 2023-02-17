@@ -23,7 +23,6 @@ echo "Chrome version: ${chrome_version[2]}"
 
 chromedriver_version=$(curl "https://chromedriver.storage.googleapis.com/LATEST_RELEASE")
 echo "Chromedriver version: ${chromedriver_version}"
-
 if [ "${chrome_version[2]}" == "$chromedriver_version" ]; then
     echo "Compatible Chromedriver is available..."
     echo "Proceeding with installation..."
@@ -41,6 +40,6 @@ unzip -q "chromedriver_linux64.zip" -d "chromedriver/stable"
 chmod +x "chromedriver/stable/chromedriver"
 
 echo "Install Selenium..."
-pipenv install selenium
+python3 -m pip install selenium
 
 popd
