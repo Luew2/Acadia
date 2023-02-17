@@ -130,4 +130,6 @@ dmypy.json
 
 # ignore files in data
 /sticker_generator/data/*
-# !/sticker_generator/data/.gitkeep
+
+!/sticker_generator/data/.gitkeep
+!.gitignore
