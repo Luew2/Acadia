@@ -35,7 +35,7 @@ def generateDalle(size="", number=1) -> None:
         n=1,
         size=size_converter(size)
         )
-        
+
         imageUrl = response['data'][0]['url']
         imgData = requests.get(imageUrl).content
 
@@ -48,3 +48,4 @@ def generateDalle(size="", number=1) -> None:
 
         with open("../Sticker_Generator/data/" + randName, 'wb') as handler:
             handler.write(imgData)
+    print("Sticler(s) generated in Acadia/Sticker_Generator/data")
