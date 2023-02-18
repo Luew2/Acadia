@@ -23,6 +23,11 @@ pip install pipenv
 pipenv sync
 ```
 
+6. Run virtual environment
+```bash
+pipenv shell
+```
+
 # Run
 Run the main file in the desired sub-project directory.
 
