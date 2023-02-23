@@ -1,7 +1,7 @@
 import random
 
 # Sticker Types
-stickerTypes = ["funny giraffe sticker", "harry potter sticker", "great dane sticker"]
+stickerTypes = ["funny giraffe cartoon", "harry potter cartoon", "great dane cartoon"]
 
 # Select sticker type
 def randomSticker() -> str:

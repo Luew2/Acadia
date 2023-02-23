@@ -22,3 +22,5 @@ allow_prereleases = false
 openai = "*"
 selenium = "*"
 webdriver-manager = "*"
+opencv-python = "*"
+numpy = "*"

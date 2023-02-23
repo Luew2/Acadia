@@ -39,7 +39,7 @@ def generateDalle(size="", number=1) -> None:
         imageUrl = response['data'][0]['url']
         imgData = requests.get(imageUrl).content
 
-        randName = str(uuid.uuid4()) + ".jpg"
+        randName = str(uuid.uuid4()) + ".png"
         
         path = "../Sticker_Generator/data/"
         isExist = os.path.exists(path)
