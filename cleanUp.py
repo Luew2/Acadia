@@ -7,5 +7,5 @@ for file_name in os.listdir(path):
     file = path + file_name
     print(file)
     if os.path.isfile(file):
-        print('Deleting file:', file)
+        print("Deleting file:", file)
         os.remove(file)

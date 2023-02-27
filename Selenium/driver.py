@@ -10,7 +10,9 @@ from selenium.webdriver.chrome.options import Options
 ## Setup chrome options
 # chrome_options = Options()
 chrome_options = webdriver.ChromeOptions()
-chrome_options.add_argument("user-data-dir=" + os.environ.get("ENV_CHROME_PROFILE"))  # Path to your chrome profile, to find it you can open chrome and type: "chrome://version/" on URL
+chrome_options.add_argument(
+    "user-data-dir=" + os.environ.get("ENV_CHROME_PROFILE")
+)  # Path to your chrome profile, to find it you can open chrome and type: "chrome://version/" on URL
 
 # chrome_options.add_argument("--headless") # Ensure GUI is off
 chrome_options.add_argument("--no-sandbox")
@@ -37,6 +39,6 @@ browser.get("https://www.redbubble.com")
 # password.send_keys(Keys.RETURN)
 
 
-#Wait for 3 seconds
+# Wait for 3 seconds
 time.sleep(100)
 browser.quit()

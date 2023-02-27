@@ -4,7 +4,7 @@ import os
 import random
 
 print(os.listdir("."))
-dir = 'Sticker_Generator/data'
+dir = "Sticker_Generator/data"
 filename = random.choice(os.listdir("Sticker_Generator/data"))
 path = os.path.join(dir, filename)
 
@@ -21,16 +21,16 @@ mask = 255 - mask
 
 # apply morphology to remove isolated extraneous noise
 # use borderconstant of black since foreground touches the edges
-kernel = np.ones((3,3), np.uint8)
+kernel = np.ones((3, 3), np.uint8)
 mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
 mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
 
 # anti-alias the mask -- blur then stretch
 # blur alpha channel
-mask = cv2.GaussianBlur(mask, (0,0), sigmaX=2, sigmaY=2, borderType = cv2.BORDER_DEFAULT)
+mask = cv2.GaussianBlur(mask, (0, 0), sigmaX=2, sigmaY=2, borderType=cv2.BORDER_DEFAULT)
 
 # linear stretch so that 127.5 goes to 0, but 255 stays 255
-mask = (2*(mask.astype(np.float32))-255.0).clip(0,255).astype(np.uint8)
+mask = (2 * (mask.astype(np.float32)) - 255.0).clip(0, 255).astype(np.uint8)
 
 # put mask into alpha channel
 result = img.copy()
