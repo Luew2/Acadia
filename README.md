@@ -33,7 +33,7 @@ pipenv shell
 ```
 
 
-# ENV VARIABLES
+## ENV VARIABLES
 
 Make sure to create a .env file
 
@@ -46,12 +46,12 @@ For more information on setting openai variables see: https://help.openai.com/en
 
 For ENV_CHROME_PROFILE see *First Time Setup* Selenium step below.
 
-# Run Generator
+## Run Generator
 Run the main file in the desired sub-project directory.
 
 Currently: run main.py in Sticker_Generator with option args -n (number of stickers), -size (256, 512, 1024) to generate stickers.
 
-# Run Selenium
+## Run Selenium
 --- --- --- ---
  ### FIRST TIME SETUP
 Open up your chrome and go to chrome://version/ and identify the default profile. Set this as your ENV_CHROME_PROFILE variable.
@@ -66,5 +66,5 @@ Run the Selenium driver
 python Selenium/driver.py
 ```
 
-# Clean up
+## Clean up
 run clean_up.py in the base directory to remove generated stickers in Sticker_Generator/data
