@@ -34,9 +34,9 @@ pipenv shell
 Make sure to create a .env file
 
 The following environment variables must be set:
-ENV_OPENAI_KEY
-ENV_OPENAI_ORG
-ENV_CHROME_PROFILE
+* ENV_OPENAI_KEY
+* ENV_OPENAI_ORG
+* ENV_CHROME_PROFILE
 
 For more information on setting openai variables see: https://help.openai.com/en/articles/4936850-where-do-i-find-my-secret-api-key
 
