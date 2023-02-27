@@ -2,7 +2,7 @@ import openai
 import requests
 import uuid
 import os
-from generators.types.typeGenerator import randomSticker
+from generators.types.type_generator import random_sticker
 
 
 # Convert size to correct format
@@ -34,7 +34,7 @@ def generate_dalle(size="", number=1) -> None:
     """Generates a sticker with the DALL-E model"""
     number = number_converter(number)
     for number in range(number):
-        sticker = randomSticker()
+        sticker = random_sticker()
         response = openai.Image.create(prompt=sticker, n=1, size=size_converter(size))
 
         imageUrl = response["data"][0]["url"]
@@ -49,4 +49,5 @@ def generate_dalle(size="", number=1) -> None:
 
         with open("../Sticker_Generator/data/" + randName, "wb") as handler:
             handler.write(imgData)
+
     print("Sticker(s) generated in Acadia/Sticker_Generator/data")
