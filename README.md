@@ -63,4 +63,4 @@ python Selenium/driver.py
 ```
 
 # Clean up
-run cleanUp.py in the base directory to remove generated stickers in Sticker_Generator/data
+run clean_up.py in the base directory to remove generated stickers in Sticker_Generator/data
