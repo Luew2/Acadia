@@ -30,6 +30,7 @@ MANIFEST
 
 #ignore deb
 Selenium/*.deb
+Selenium/*.deb.*
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
