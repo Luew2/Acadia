@@ -8,7 +8,7 @@ Tool for creating stickers and selling on Redbubble.
 
 ## Setup
 The steps below walk you through an initial setup and a clean Python environment.
-I use [`Pipenv`](https://realpython.com/pipenv-guide/) to manage our project environment
+I use [`Pipenv`](https://realpython.com/pipenv-guide/) to manage the project environment
 and [`pre-commit`](https://pre-commit.com) to run CI actions both locally and in PR checks.
 
 1. Install Python 3.10 - https://www.python.org/downloads/
