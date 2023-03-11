@@ -40,7 +40,7 @@ Make sure to create a .env file
 The following environment variables must be set:
 * ENV_OPENAI_KEY
 * ENV_OPENAI_ORG
-* ENV_CHROME_PROFILE
+* ENV_CHROME_PROFILE -- **Temp not needed**
 
 For more information on setting openai variables see: https://help.openai.com/en/articles/4936850-where-do-i-find-my-secret-api-key
 
@@ -49,7 +49,7 @@ For ENV_CHROME_PROFILE see *First Time Setup* Selenium step below.
 ## Run Generator
 Run the main file in the desired sub-project directory.
 
-Currently: run main.py in Sticker_Generator with option args -n (number of stickers), -size (256, 512, 1024) to generate stickers.
+Currently: run main.py in the root directory -- make sure the above environment variables are set.
 
 ## Run Selenium
 --- --- --- ---
