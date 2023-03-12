@@ -41,10 +41,14 @@ def redbubble_upload():
     browser = webdriver.Chrome(service=webdriver_service, chrome_options=chrome_options)
 
     # Navigate to Redbubble website
-    browser.get("https://www.redbubble.com")
+    browser.get("https://www.remove.bg/")
 
     # Wait for 10 seconds
-    time.sleep(10)
+    time.sleep(1000)
 
     # Quit browser
     browser.quit()
+
+
+if __name__ == "__main__":
+    redbubble_upload()

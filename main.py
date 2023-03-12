@@ -80,7 +80,7 @@ def main(stdscr):
     stdscr.refresh()
 
     # Define options for sticker generator
-    options_generator = ["Dalle", "Other Generator"]
+    options_generator = ["Dalle"]
     selected_option_generator = 0
 
     # Print options and allow user to select one
@@ -165,7 +165,7 @@ def main(stdscr):
             "Sticker generated in /Acadia/Sticker_Generator/data! Uploading to RedBubble...",
         )
         stdscr.refresh()
-        #redbubble_upload()
+        # redbubble_upload()
     else:
         stdscr.refresh()
         stdscr.clear()
