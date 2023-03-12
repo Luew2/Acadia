@@ -152,5 +152,5 @@ def backround_remover(sticker, ROOT_DIR=""):
 
 if __name__ == "__main__":
     # Example usage
-    name = "NO-BACKGROUND_283d5293-7218-4b04-854e-0cd6319ab278.png"
+    name = ""
     backround_remover(name, "")
