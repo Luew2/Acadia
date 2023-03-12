@@ -66,7 +66,7 @@ def fing_significant_contour(edge_img):
 
 def backround_remover(sticker, ROOT_DIR=""):
     """
-    Remove background from an input image using OpenCV and save the result.
+    Remove background from an input image using OpenCV and save the result with transparent background.
 
     Args:
     sticker (str): Name of the image file.
@@ -85,7 +85,6 @@ def backround_remover(sticker, ROOT_DIR=""):
     # Apply Gaussian blur
     g_blurred = cv2.GaussianBlur(image_vec, (5, 5), 0)
     blurred_float = g_blurred.astype(np.float32) / 255.0
-    # cv2.imwrite("blur.jpg", g_blurred)
 
     # Detect edges in the image
     edge_detector = cv2.ximgproc.createStructuredEdgeDetection(
@@ -93,13 +92,9 @@ def backround_remover(sticker, ROOT_DIR=""):
     )
     edges = edge_detector.detectEdges(blurred_float) * 255.0
 
-    # Save the raw edges image
-    # cv2.imwrite("edge-raw.jpg", edges)
-
     # Add salt and pepper noise to the edges image
     edges_ = np.asarray(edges, np.uint8)
     salt_pepper_noise(edges_)
-    # cv2.imwrite("edge.jpg", edges_)
 
     # Find the significant contour in the edges image
     contour = fing_significant_contour(edges_)
@@ -107,7 +102,6 @@ def backround_remover(sticker, ROOT_DIR=""):
     # Draw the contour on the original image
     contourImg = np.copy(image_vec)
     cv2.drawContours(contourImg, contour, 0, (0, 255, 0), 2, cv2.LINE_AA, maxLevel=-1)
-    cv2.imwrite("contour.jpg", contourImg)
 
     # Create a mask of the contour
     mask = np.zeros_like(edges_)
@@ -121,11 +115,6 @@ def backround_remover(sticker, ROOT_DIR=""):
     trimap[mask == 0] = cv2.GC_BGD
     trimap[mask == 255] = cv2.GC_PR_BGD
     trimap[map_fg == 255] = cv2.GC_FGD
-
-    # Visualize the trimap
-    trimap_print = np.copy(trimap)
-    trimap_print[trimap_print == cv2.GC_PR_BGD] = 128
-    trimap_print[trimap_print == cv2.GC_FGD] = 255
 
     # Apply GrabCut algorithm
     bgd_model = np.zeros((1, 65), np.float64)
@@ -143,11 +132,15 @@ def backround_remover(sticker, ROOT_DIR=""):
     # Create a mask where 0 and 2 are background and 1 and 3 are foreground
     mask2 = np.where((mask == 2) | (mask == 0), 0, 1).astype("uint8")
 
-    # Apply the mask to the image
-    result = image_vec * mask2[:, :, np.newaxis]
+    # Add alpha channel to the image
+    result = np.dstack((image_vec, mask2 * 255))
 
-    # Save the image with the removed background
-    cv2.imwrite(dir + "/NO-BACKGROUND_" + sticker, result)
+    # Set the alpha value of the background pixels to 0
+    result[np.all(result[:, :, :3] == 0, axis=2)] = [0, 0, 0, 0]
+
+    # Save the image with transparent background
+    cv2.imwrite(dir + "/NO-BACKGROUND_" + sticker.split(".")[0] + ".png", result)
+
 
 
 if __name__ == "__main__":
