@@ -142,7 +142,6 @@ def backround_remover(sticker, ROOT_DIR=""):
     cv2.imwrite(dir + "/NO-BACKGROUND_" + sticker.split(".")[0] + ".png", result)
 
 
-
 if __name__ == "__main__":
     # Example usage
     name = ""
