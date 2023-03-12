@@ -83,7 +83,7 @@ def generate_dalle(ROOT_DIR="", sticker="Giraffe", size="", number=1) -> None:
             if flag == False:
                 # Use OpenAI API to create an image
                 response = openai.Image.create(
-                    prompt=sticker + "as a cartoon sticker without text",
+                    prompt=sticker + "as a cartoon sticker",
                     n=1,
                     size=size_converter(size),
                 )
