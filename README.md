@@ -54,7 +54,7 @@ Currently: run main.py in the root directory -- make sure the above environment 
  ### FIRST TIME SETUP
 Open up your chrome and go to chrome://version/ and identify the default profile. Set this as your ENV_CHROME_PROFILE variable.
 
-Go to RedBubble.com and login with the chrome browser you are planning to use with Selenium.
+Go to whichever website you want to sell stickers on and login with the chrome browser you are planning to use with Selenium.
 --- --- --- ---
 
 ### Running Selenium
