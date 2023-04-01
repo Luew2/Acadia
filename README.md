@@ -4,7 +4,7 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 
-Tool for creating stickers and selling on Redbubble.
+Tool for creating stickers.
 
 ## Setup
 The steps below walk you through an initial setup and a clean Python environment.
