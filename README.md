@@ -36,6 +36,7 @@ pipenv shell
 ## ENV VARIABLES
 
 Make sure to create a .env file
+Make sure (if using the AI removal method) you have a model saved in ~/.u2net
 
 The following environment variables must be set:
 * ENV_OPENAI_KEY

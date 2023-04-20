@@ -3,7 +3,8 @@ import argparse
 import openai
 import curses
 from Sticker_Generator.generators.dalle.dalle import generate_dalle
-from Transformer.remove_background import backround_remover
+from Transformer.ai_remove_background import background_remover_ai
+from Transformer.remove_background import background_remover
 from Selenium.driver import redbubble_upload
 
 #############################################################################
@@ -80,7 +81,7 @@ def main(stdscr):
     stdscr.refresh()
 
     # Define options for sticker generator
-    options_generator = ["Dalle"]
+    options_generator = ["Dalle", "VQGAN"]
     selected_option_generator = 0
 
     # Print options and allow user to select one
@@ -141,6 +142,38 @@ def main(stdscr):
             )
         elif key == curses.KEY_ENTER or key == 10:
             break
+    
+    # Define options for background remover
+    options_remover = ["Standard", "AI"]
+    selected_option_remover = 0
+
+    # Print options and allow user to select one
+    while True:
+        # Clear screen and print options
+        stdscr.clear()
+        stdscr.addstr(0, 0, "You entered: " + user_input)
+        stdscr.addstr(2, 0, "Select a background remover method:")
+        for i in range(len(options_remover)):
+            if i == selected_option_remover:
+                stdscr.addstr(i + 4, 2, "> " + options_remover[i])
+            else:
+                stdscr.addstr(i + 4, 4, options_remover[i])
+        stdscr.refresh()
+
+        # Wait for user input
+        key = stdscr.getch()
+
+        # Update selected option based on user input
+        if key == curses.KEY_UP:
+            selected_option_remover = (selected_option_remover - 1) % len(
+                options_remover
+            )
+        elif key == curses.KEY_DOWN:
+            selected_option_remover = (selected_option_remover + 1) % len(
+                options_remover
+            )
+        elif key == curses.KEY_ENTER or key == 10:
+            break
 
     # Clear screen and print final message
     stdscr.clear()
@@ -154,15 +187,19 @@ def main(stdscr):
         sticker = generate_dalle(
             ROOT_DIR, user_input, options_sticker[selected_option_sticker]
         )
-        backround_remover(sticker, ROOT_DIR)
+        if selected_option_remover == 0:
+            background_remover(sticker, ROOT_DIR)
+        else:
+            background_remover_ai(sticker, ROOT_DIR)
         stdscr.refresh()
+
         # Clear screen and print final message
         stdscr.clear()
         stdscr.addstr(0, 0, "Your Sticker is: " + user_input)
         stdscr.addstr(
             2,
             0,
-            "Sticker generated in /Acadia/Sticker_Generator/data! Uploading to RedBubble...",
+            "Sticker generated in /Acadia/Sticker_Generator/data!",
         )
         stdscr.refresh()
         # redbubble_upload()
