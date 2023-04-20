@@ -145,7 +145,7 @@ def main(stdscr):
     
     # Define options for background remover
     options_remover = ["Standard", "AI"]
-    selected_option_remover = 0
+    selected_option_remover = 1
 
     # Print options and allow user to select one
     while True:

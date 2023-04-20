@@ -60,6 +60,9 @@ coverage.xml
 *.mo
 *.pot
 
+# model
+Transformer/u2net.onnx
+
 # Django stuff:
 *.log
 local_settings.py

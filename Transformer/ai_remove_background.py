@@ -25,7 +25,8 @@ def background_remover_ai(sticker, ROOT_DIR=""):
     input_img = cv2.cvtColor(input_img, cv2.COLOR_BGR2RGB)
 
     # Create the ONNX Runtime session
-    onnx_path = os.path.join(os.path.expanduser("~"), ".u2net", "u2net.onnx")
+    script_dir = os.path.dirname(os.path.realpath(__file__))
+    onnx_path = os.path.join(script_dir, "u2net.onnx")
     ort_session = ort.InferenceSession(onnx_path)
 
     # Preprocess the input image
@@ -56,14 +57,23 @@ def background_remover_ai(sticker, ROOT_DIR=""):
 
     mask = mask.astype(np.uint8)
 
+    # Save the binary mask
+    mask_path = os.path.join(dir, "MASK_" + sticker.split(".")[0] + ".png")
+    cv2.imwrite(mask_path, mask)
+
     # Perform the bitwise operation to remove the background
     input_img_uint8 = (input_img.squeeze().transpose(1, 2, 0) * 255).astype(np.uint8)
     input_img_bgr = cv2.cvtColor(input_img_uint8, cv2.COLOR_RGB2BGR)
-    output = cv2.bitwise_and(input_img_bgr, input_img_bgr, mask=mask)
+    foreground = cv2.bitwise_and(input_img_bgr, input_img_bgr, mask=mask)
+
+    # Merge the foreground with the alpha channel
+    output = cv2.cvtColor(foreground, cv2.COLOR_BGR2BGRA)
+    output[:, :, 3] = mask
 
     # Save the image with transparent background
     output_path = os.path.join(dir, "NO-BACKGROUND_" + sticker.split(".")[0] + ".png")
     cv2.imwrite(output_path, output)
+
 
 if __name__ == "__main__":
     # Example usage
