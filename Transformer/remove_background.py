@@ -1,12 +1,72 @@
-import os
 import cv2
 import numpy as np
-import onnxruntime as ort
+import os
+
+
+def salt_pepper_noise(edge_img):
+    """
+    Apply salt and pepper noise reduction to an edge image.
+
+    Args:
+    edgeImg (numpy.ndarray): The input edge image.
+
+    Returns:
+    None
+    """
+    count = 0
+    last_median = edge_img
+    median = cv2.medianBlur(edge_img, 3)
+    while not np.array_equal(last_median, median):
+        zeroed = np.invert(np.logical_and(median, edge_img))
+        edge_img[zeroed] = 0
+        count = count + 1
+        if count > 70:
+            break
+        last_median = median
+        median = cv2.medianBlur(edge_img, 3)
+
+
+def fing_significant_contour(edge_img):
+    """
+    Find the largest contour in an edge image.
+
+    Args:
+    edge_img (numpy.ndarray): The input edge image.
+
+    Returns:
+    numpy.ndarray: The largest contour.
+    """
+    # contours, hierarchy = cv2.findContours(
+    #     edge_img, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
+    # )
+
+    contours, hierarchy = cv2.findContours(
+        edge_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE
+    )
+
+    # Find level 1 contours
+    level1Meta = []
+    for contour_index, tupl in enumerate(hierarchy[0]):
+        # Filter the ones without parent
+        if tupl[3] == -1:
+            tupl = np.insert(tupl.copy(), 0, [contour_index])
+            level1Meta.append(tupl)
+
+    # From among them, find the contours with large surface area.
+    contours_with_area = []
+    for tupl in level1Meta:
+        contour_index = tupl[0]
+        contour = contours[contour_index]
+        area = cv2.contourArea(contour)
+        contours_with_area.append([contour, area, contour_index])
+    contours_with_area.sort(key=lambda meta: meta[1], reverse=True)
+    largest_contour = contours_with_area[0][0]
+    return [largest_contour]
 
 
 def background_remover(sticker, ROOT_DIR=""):
     """
-    Remove background from an input image using U2Net and save the result with transparent background.
+    Remove background from an input image using OpenCV and save the result with transparent background.
 
     Args:
     sticker (str): Name of the image file.
@@ -17,54 +77,72 @@ def background_remover(sticker, ROOT_DIR=""):
     """
 
     # Set the directory to the data folder
-    dir = os.path.join(ROOT_DIR, "Sticker_Generator/data/")
+    dir = os.path.join(ROOT_DIR + "/Sticker_Generator/data/")
 
     # Load the input image
-    input_path = os.path.join(dir, sticker)
-    input_img = cv2.imread(input_path)
-    input_img = cv2.cvtColor(input_img, cv2.COLOR_BGR2RGB)
+    image_vec = cv2.imread(os.path.join(dir, sticker), 1)
 
-    # Create the ONNX Runtime session
-    onnx_path = os.path.join(os.path.expanduser("~"), ".u2net", "u2net.onnx")
-    ort_session = ort.InferenceSession(onnx_path)
+    # Apply Gaussian blur
+    g_blurred = cv2.GaussianBlur(image_vec, (5, 5), 0)
+    blurred_float = g_blurred.astype(np.float32) / 255.0
 
-    # Preprocess the input image
-    input_img = cv2.resize(input_img, (320, 320))
-    input_img = input_img.astype(np.float32) / 255.0
-    input_img = np.transpose(input_img, (2, 0, 1))
-    input_img = np.expand_dims(input_img, axis=0)
+    # Detect edges in the image
+    edge_detector = cv2.ximgproc.createStructuredEdgeDetection(
+        ROOT_DIR + "/Transformer/model.yml"
+    )
+    edges = edge_detector.detectEdges(blurred_float) * 255.0
 
-    # Run the U2Net model on the input image
-    output = ort_session.run(None, {'input': input_img})[0]
-    output = output.squeeze()
-    output = cv2.resize(output, (input_img.shape[3], input_img.shape[2]))
-    output = (output * 255).astype(np.uint8)
+    # Add salt and pepper noise to the edges image
+    edges_ = np.asarray(edges, np.uint8)
+    salt_pepper_noise(edges_)
 
-    # Check if the image has three channels before converting to grayscale
-    if output.shape[-1] == 3:
-        gray = cv2.cvtColor(output, cv2.COLOR_RGB2GRAY)
-    else:
-        gray = output
+    # Find the significant contour in the edges image
+    contour = fing_significant_contour(edges_)
 
-    # Threshold the grayscale image to create a binary mask
-    _, mask = cv2.threshold(gray, 10, 255, cv2.THRESH_BINARY)
+    # Draw the contour on the original image
+    contourImg = np.copy(image_vec)
+    cv2.drawContours(contourImg, contour, 0, (0, 255, 0), 2, cv2.LINE_AA, maxLevel=-1)
 
-    # Resize the mask to match the dimensions of the input image
-    mask = cv2.resize(mask, (input_img.shape[3], input_img.shape[2]))
+    # Create a mask of the contour
+    mask = np.zeros_like(edges_)
+    cv2.fillPoly(mask, contour, 255)
 
-    # Convert the mask to uint8
-    mask = mask.astype(np.uint8)
+    # Dilate the mask to create a sure foreground area
+    map_fg = cv2.erode(mask, np.ones((5, 5), np.uint8), iterations=10)
 
-    # Perform the bitwise operation to remove the background
-    input_img_uint8 = (input_img.squeeze().transpose(1, 2, 0) * 255).astype(np.uint8)
-    input_img_bgr = cv2.cvtColor(input_img_uint8, cv2.COLOR_RGB2BGR)
-    output = cv2.bitwise_and(input_img_bgr, input_img_bgr, mask=mask)
+    # Mark initial mask as "probably background" and mapFg as sure foreground
+    trimap = np.copy(mask)
+    trimap[mask == 0] = cv2.GC_BGD
+    trimap[mask == 255] = cv2.GC_PR_BGD
+    trimap[map_fg == 255] = cv2.GC_FGD
+
+    # Apply GrabCut algorithm
+    bgd_model = np.zeros((1, 65), np.float64)
+    fgd_model = np.zeros((1, 65), np.float64)
+    mask, bgd_model, fgd_model = cv2.grabCut(
+        image_vec,
+        trimap,
+        None,
+        bgd_model,
+        fgd_model,
+        iterCount=5,
+        mode=cv2.GC_INIT_WITH_MASK,
+    )
+
+    # Create a mask where 0 and 2 are background and 1 and 3 are foreground
+    mask2 = np.where((mask == 2) | (mask == 0), 0, 1).astype("uint8")
+
+    # Add alpha channel to the image
+    result = np.dstack((image_vec, mask2 * 255))
+
+    # Set the alpha value of the background pixels to 0
+    result[np.all(result[:, :, :3] == 0, axis=2)] = [0, 0, 0, 0]
 
     # Save the image with transparent background
-    output_path = os.path.join(dir, "NO-BACKGROUND_" + sticker.split(".")[0] + ".png")
-    cv2.imwrite(output_path, output)
+    cv2.imwrite(dir + "/NO-BACKGROUND_" + sticker.split(".")[0] + ".png", result)
+
 
 if __name__ == "__main__":
     # Example usage
-    name = "example_image.png"
-    background_remover(name, "")
+    name = "3eddbf91-c931-4f68-9197-f3017b2ffbdb.png"
+    background_remover(name, "/home/luew/Projects/Acadia/")
