@@ -73,12 +73,12 @@ def generate_dalle(ROOT_DIR="", sticker="Giraffe", size="", number=1) -> None:
             # Pause for 0.01 seconds
             time.sleep(0.01)
             # Print progress bar
-            sys.stdout.write(
-                "\r"
-                + "generating sticker"
-                + ": [%-100s] %d%%" % ("=" * int(i / 100 * 100), i)
-            )
-            sys.stdout.flush()
+            # sys.stdout.write(
+            #     "\r"
+            #     + "generating sticker"
+            #     + ": [%-100s] %d%%" % ("=" * int(i / 100 * 100), i)
+            # )
+            # sys.stdout.flush()
             # If flag is False
             if flag == False:
                 # Use OpenAI API to create an image

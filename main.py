@@ -2,6 +2,7 @@ import os
 import argparse
 import openai
 import curses
+import json
 from Sticker_Generator.generators.dalle.dalle import generate_dalle
 from Transformer.ai_remove_background import background_remover_ai
 from Transformer.remove_background import background_remover
@@ -49,6 +50,31 @@ openai.api_key = os.environ.get("ENV_OPENAI_KEY")
 # Runtime
 #
 #############################################################################
+
+def generate_sticker(data):
+    sticker = data.get("sticker")
+    if not sticker:
+        return {"error": "Missing 'sticker' value in the request data"}
+
+    size = data.get("size", "256")
+    number = data.get("number", 1)
+
+    sticker_filename = generate_dalle(ROOT_DIR, sticker, size, number)
+
+
+    if data.get("remover_method", "AI") == "AI":
+        background_remover_ai(sticker_filename, ROOT_DIR)
+        sticker_url = f'/Sticker_Generator/data/NO-BACKGROUND_AI_{sticker_filename}'
+    else:
+        background_remover(sticker_filename, ROOT_DIR)
+        sticker_url = f'/Sticker_Generator/data/NO-BACKGROUND_{sticker_filename}'
+    # else:
+    #     sticker_url = f'/Sticker_Generator/data/{sticker_filename}'
+
+    return sticker_url
+
+
+
 
 
 def main(stdscr):
@@ -212,5 +238,5 @@ def main(stdscr):
     stdscr.getch()
 
 
-if __name__ == "__main__":
-    curses.wrapper(main)
+# if __name__ == "__main__":
+#     curses.wrapper(main)
