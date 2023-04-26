@@ -1,9 +1,19 @@
 {
     "builds": [
-      { "src": "api.py", "use": "@vercel/python" }
+      {
+        "src": "api.py",
+        "use": "@vercel/python"
+      }
     ],
     "routes": [
-      { "src": "/(.*)", "dest": "/frontend/$1" }
+      {
+        "src": "/frontend/(.*)",
+        "dest": "sticker-generator-frontend/$1"
+      },
+      {
+        "src": "/(.*)",
+        "dest": "/api.py"
+      }
     ]
   }
   
