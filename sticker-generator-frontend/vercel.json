@@ -1,18 +1,23 @@
 {
+    "version": 2,
     "builds": [
       {
         "src": "api.py",
         "use": "@vercel/python"
+      },
+      {
+        "src": "sticker-generator-frontend",
+        "use": "@vercel/static"
       }
     ],
     "routes": [
       {
-        "src": "/frontend/(.*)",
-        "dest": "sticker-generator-frontend/$1"
+        "src": "/generate-sticker",
+        "dest": "/api.py"
       },
       {
         "src": "/(.*)",
-        "dest": "/api.py"
+        "dest": "/sticker-generator-frontend/$1"
       }
     ]
   }
