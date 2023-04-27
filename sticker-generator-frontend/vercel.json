@@ -1,0 +1,32 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "api.py",
+        "use": "@vercel/python"
+      },
+      {
+        "src": "sticker-generator-frontend/build",
+        "use": "@vercel/static"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/generate-sticker",
+        "dest": "/api.py"
+      },
+      {
+        "src": "/(.*)",
+        "dest": "/sticker-generator-frontend/build/$1"
+      }
+    ],
+    "env": {
+      "FLASK_APP": "api.py"
+    },
+    "functions": {
+      "api/*": {
+        "includeFiles": "api.py"
+      }
+    }
+  }
+  
