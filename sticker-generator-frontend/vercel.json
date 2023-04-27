@@ -16,6 +16,10 @@
         "dest": "/api.py"
       },
       {
+        "src": "/Sticker_Generator/data/(.*)",
+        "dest": "http://localhost:5000/Sticker_Generator/data/$1"
+      },
+      {
         "src": "/(.*)",
         "dest": "/sticker-generator-frontend/build/$1"
       }
