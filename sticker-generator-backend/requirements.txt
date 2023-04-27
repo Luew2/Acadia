@@ -1,0 +1,10 @@
+openai
+selenium
+webdriver-manager
+numpy
+flake8
+black
+rembg
+opencv-contrib-python
+Flask
+Flask-Cors
