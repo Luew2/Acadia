@@ -6,24 +6,6 @@
         "use": "@vercel/next"
       }
     ],
-    "functions": {
-      "api/*": {
-        "runtime": "vercel-python@0.5.0",
-        "memory": 1024,
-        "maxDuration": 10,
-        "includeFiles": "api.py, Sticker_Generator/data/**/*"
-      }
-    },
-    "routes": [
-      {
-        "src": "/generate-sticker",
-        "dest": "api/generate_sticker_endpoint"
-      },
-      {
-        "src": "/Sticker_Generator/data/(.*)",
-        "dest": "Sticker_Generator/data/$1"
-      }
-    ],
     "env": {
       "FLASK_APP": "api.py"
     }
