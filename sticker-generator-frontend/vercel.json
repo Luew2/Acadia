@@ -5,10 +5,7 @@
         "runtime": "vercel-python@0.5.0",
         "memory": 1024,
         "maxDuration": 10,
-        "includeFiles": [
-          "api.py",
-          "Sticker_Generator/data/**/*"
-        ]
+        "includeFiles": "api.py, Sticker_Generator/data/**/*"
       }
     },
     "routes": [
