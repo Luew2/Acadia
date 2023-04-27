@@ -1,5 +1,11 @@
 {
     "version": 2,
+    "builds": [
+      {
+        "src": "sticker-generator-frontend/package.json",
+        "use": "@vercel/next"
+      }
+    ],
     "functions": {
       "api/*": {
         "runtime": "vercel-python@0.5.0",
@@ -16,10 +22,6 @@
       {
         "src": "/Sticker_Generator/data/(.*)",
         "dest": "Sticker_Generator/data/$1"
-      },
-      {
-        "src": "/(.*)",
-        "dest": "/sticker-generator-frontend/build/$1"
       }
     ],
     "env": {
